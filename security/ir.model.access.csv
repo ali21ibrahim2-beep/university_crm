@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_student_lead_employee,student.lead.employee,model_student_lead,university_crm.group_university_employee,1,1,1,0
+access_student_lead_manager,student.lead.manager,model_student_lead,university_crm.group_university_manager,1,1,1,1

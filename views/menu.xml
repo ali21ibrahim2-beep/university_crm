@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <data>
+
+    <!-- ── ROOT MENU ─────────────────────────────────────────
+         This is the main menu item in the top navigation bar
+         It has no action because it is just a container
+    ──────────────────────────────────────────────────────── -->
+    <menuitem id='menu_univ_root'
+              name='University CRM'
+              sequence='10'/>
+
+    <!-- ── CATALOG SUBMENU ───────────────────────────────────
+         This appears when you click University CRM
+         It is a group/category — also no action
+    ──────────────────────────────────────────────────────── -->
+    <menuitem id='menu_univ_catalog'
+              name='Catalog'
+              parent='menu_univ_root'
+              sequence='10'/>
+
+    <!-- ── STUDENTS MENU ITEM ────────────────────────────────
+         This is the actual clickable item
+         It has an action that opens the students list
+    ──────────────────────────────────────────────────────── -->
+    <menuitem id='menu_univ_students'
+              name='Students'
+              parent='menu_univ_catalog'
+              action='action_student_lead'
+              sequence='10'/>
+
+  </data>
+</odoo>

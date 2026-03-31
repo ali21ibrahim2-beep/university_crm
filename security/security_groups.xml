@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <data>
+
+    <!-- ── SECURITY GROUPS ──────────────────────────────────
+         Defines who can do what in University CRM
+         Group 1 = Employee — limited access
+         Group 2 = Manager — full access
+    ──────────────────────────────────────────────────────── -->
+
+    <!-- Category — groups our security groups together -->
+    <record id='module_category_university_crm' model='ir.module.category'>
+      <field name='name'>University CRM</field>
+      <field name='sequence'>10</field>
+    </record>
+
+    <!-- ── EMPLOYEE GROUP ───────────────────────────────────
+         Regular employees — can only see their own students
+    ──────────────────────────────────────────────────────── -->
+    <record id='group_university_employee' model='res.groups'>
+      <field name='name'>Employee</field>
+      <field name='category_id' ref='module_category_university_crm'/>
+      <field name='comment'>
+        Can add and edit their own students only.
+        Cannot delete or see other employees students.
+      </field>
+    </record>
+
+    <!-- ── MANAGER GROUP ────────────────────────────────────
+         Manager — full access to everything
+         Inherits from Employee group
+    ──────────────────────────────────────────────────────── -->
+    <record id='group_university_manager' model='res.groups'>
+      <field name='name'>Manager</field>
+      <field name='category_id' ref='module_category_university_crm'/>
+      <field name='implied_ids' eval="[(4, ref('group_university_employee'))]"/>
+      <field name='comment'>
+        Full access — can see all students, edit and delete anything.
+        Can create employee accounts and send portal invitations.
+      </field>
+    </record>
+
+  </data>
+</odoo>
