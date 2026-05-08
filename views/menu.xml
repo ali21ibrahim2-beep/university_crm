@@ -2,32 +2,37 @@
 <odoo>
   <data>
 
-    <!-- ── ROOT MENU ─────────────────────────────────────────
-         This is the main menu item in the top navigation bar
-         It has no action because it is just a container
-    ──────────────────────────────────────────────────────── -->
     <menuitem id='menu_univ_root'
               name='University CRM'
+              groups='university_crm.group_university_employee'
               sequence='10'/>
 
-    <!-- ── CATALOG SUBMENU ───────────────────────────────────
-         This appears when you click University CRM
-         It is a group/category — also no action
-    ──────────────────────────────────────────────────────── -->
     <menuitem id='menu_univ_catalog'
               name='Catalog'
               parent='menu_univ_root'
+              groups='university_crm.group_university_employee'
               sequence='10'/>
 
-    <!-- ── STUDENTS MENU ITEM ────────────────────────────────
-         This is the actual clickable item
-         It has an action that opens the students list
-    ──────────────────────────────────────────────────────── -->
     <menuitem id='menu_univ_students'
               name='Students'
               parent='menu_univ_catalog'
-              action='action_student_lead'
+              action='university_crm.action_student_lead'
+              groups='university_crm.group_university_employee'
               sequence='10'/>
+
+    <menuitem id='menu_univ_archive_manager'
+              name='Archived Students'
+              parent='menu_univ_catalog'
+              action='university_crm.action_student_archive'
+              groups='base.group_no_one'
+              sequence='20'/>
+
+    <menuitem id='menu_univ_archive_employee'
+              name='Archived Students'
+              parent='menu_univ_catalog'
+              action='university_crm.action_student_archive'
+              groups='university_crm.group_university_employee'
+              sequence='20'/>
 
   </data>
 </odoo>

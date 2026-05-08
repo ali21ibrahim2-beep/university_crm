@@ -1,0 +1,811 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <data noupdate='1'>
+
+    <!-- ── PHONE VALIDATION RULES ──────────────────────────────
+         Each record defines the mobile phone format for one country:
+         - digit_count: exact number of digits required (national, no +code)
+         - leading_digit: set of allowed first digits. Each character is one
+                          valid starting digit. "5" = must start with 5,
+                          "67" = first digit must be 6 or 7.
+                          Leave empty → no restriction.
+
+         noupdate='1' → existing records are NOT overwritten on upgrade,
+         so Managers can safely tweak any of these rules from the UI.
+    ──────────────────────────────────────────────────────── -->
+
+    <!-- ── MIDDLE EAST ──────────────────────────────────────── -->
+    <record id='phone_format_tr' model='phone.country.format'>
+      <field name='country_id' ref='base.tr'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>5</field>
+    </record>
+
+    <record id='phone_format_sa' model='phone.country.format'>
+      <field name='country_id' ref='base.sa'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>5</field>
+    </record>
+
+    <record id='phone_format_ae' model='phone.country.format'>
+      <field name='country_id' ref='base.ae'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>5</field>
+    </record>
+
+    <record id='phone_format_ye' model='phone.country.format'>
+      <field name='country_id' ref='base.ye'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <record id='phone_format_iq' model='phone.country.format'>
+      <field name='country_id' ref='base.iq'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <record id='phone_format_sy' model='phone.country.format'>
+      <field name='country_id' ref='base.sy'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <record id='phone_format_jo' model='phone.country.format'>
+      <field name='country_id' ref='base.jo'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <!-- Lebanon mobile: 3X, 70X, 71X, 76X, 78X, 79X, 81X → first digit 3, 7, or 8 -->
+    <record id='phone_format_lb' model='phone.country.format'>
+      <field name='country_id' ref='base.lb'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>378</field>
+    </record>
+
+    <!-- Kuwait mobile: 5X (Zain), 6X (Ooredoo), 9X (STC) → 5, 6, or 9 -->
+    <record id='phone_format_kw' model='phone.country.format'>
+      <field name='country_id' ref='base.kw'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>569</field>
+    </record>
+
+    <!-- Qatar mobile: 3X, 5X, 6X, 7X → any of 3, 5, 6, 7 -->
+    <record id='phone_format_qa' model='phone.country.format'>
+      <field name='country_id' ref='base.qa'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>3567</field>
+    </record>
+
+    <!-- Bahrain mobile: 3X (Batelco), 6X (Stc/Viva) → 3 or 6 -->
+    <record id='phone_format_bh' model='phone.country.format'>
+      <field name='country_id' ref='base.bh'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>36</field>
+    </record>
+
+    <!-- Oman mobile: 7X (Ooredoo), 9X (Omantel) → 7 or 9 -->
+    <record id='phone_format_om' model='phone.country.format'>
+      <field name='country_id' ref='base.om'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>79</field>
+    </record>
+
+    <record id='phone_format_ir' model='phone.country.format'>
+      <field name='country_id' ref='base.ir'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <record id='phone_format_il' model='phone.country.format'>
+      <field name='country_id' ref='base.il'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>5</field>
+    </record>
+
+    <record id='phone_format_ps' model='phone.country.format'>
+      <field name='country_id' ref='base.ps'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>5</field>
+    </record>
+
+    <record id='phone_format_af' model='phone.country.format'>
+      <field name='country_id' ref='base.af'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <!-- ── AFRICA ─────────────────────────────────────────────── -->
+    <record id='phone_format_eg' model='phone.country.format'>
+      <field name='country_id' ref='base.eg'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>1</field>
+    </record>
+
+    <!-- Morocco mobile: 6X or 7X -->
+    <record id='phone_format_ma' model='phone.country.format'>
+      <field name='country_id' ref='base.ma'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>67</field>
+    </record>
+
+    <!-- Algeria mobile: 5X, 6X, 7X -->
+    <record id='phone_format_dz' model='phone.country.format'>
+      <field name='country_id' ref='base.dz'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>567</field>
+    </record>
+
+    <!-- Tunisia mobile: 2X, 4X, 5X, 9X -->
+    <record id='phone_format_tn' model='phone.country.format'>
+      <field name='country_id' ref='base.tn'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>2459</field>
+    </record>
+
+    <record id='phone_format_ly' model='phone.country.format'>
+      <field name='country_id' ref='base.ly'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- Sudan mobile: 9X (Zain, MTN, Sudani) -->
+    <record id='phone_format_sd' model='phone.country.format'>
+      <field name='country_id' ref='base.sd'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- Nigeria mobile: 7X, 8X, 9X -->
+    <record id='phone_format_ng' model='phone.country.format'>
+      <field name='country_id' ref='base.ng'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>789</field>
+    </record>
+
+    <!-- Kenya mobile: 1X (Airtel/Telkom), 7X (Safaricom) -->
+    <record id='phone_format_ke' model='phone.country.format'>
+      <field name='country_id' ref='base.ke'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>17</field>
+    </record>
+
+    <!-- South Africa mobile: 6X, 7X, 8X -->
+    <record id='phone_format_za' model='phone.country.format'>
+      <field name='country_id' ref='base.za'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>678</field>
+    </record>
+
+    <!-- Ghana mobile: 2X (MTN), 5X (Vodafone/AirtelTigo) — most common -->
+    <record id='phone_format_gh' model='phone.country.format'>
+      <field name='country_id' ref='base.gh'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>25</field>
+    </record>
+
+    <record id='phone_format_et' model='phone.country.format'>
+      <field name='country_id' ref='base.et'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- Tanzania mobile: 6X, 7X -->
+    <record id='phone_format_tz' model='phone.country.format'>
+      <field name='country_id' ref='base.tz'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>67</field>
+    </record>
+
+    <!-- Uganda mobile: 7X -->
+    <record id='phone_format_ug' model='phone.country.format'>
+      <field name='country_id' ref='base.ug'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <record id='phone_format_sn' model='phone.country.format'>
+      <field name='country_id' ref='base.sn'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <!-- Ivory Coast mobile: 10-digit number starting with 0 (e.g. 01, 05, 07) -->
+    <record id='phone_format_ci' model='phone.country.format'>
+      <field name='country_id' ref='base.ci'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>0</field>
+    </record>
+
+    <record id='phone_format_cm' model='phone.country.format'>
+      <field name='country_id' ref='base.cm'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <!-- Angola mobile: 9X -->
+    <record id='phone_format_ao' model='phone.country.format'>
+      <field name='country_id' ref='base.ao'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- DR Congo mobile: 8X, 9X -->
+    <record id='phone_format_cd' model='phone.country.format'>
+      <field name='country_id' ref='base.cd'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>89</field>
+    </record>
+
+    <!-- Zimbabwe mobile: 7X -->
+    <record id='phone_format_zw' model='phone.country.format'>
+      <field name='country_id' ref='base.zw'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <!-- ── EUROPE ─────────────────────────────────────────────── -->
+    <!-- UK mobile national format: 07XXXXXXXXX (11 digits) -->
+    <record id='phone_format_gb' model='phone.country.format'>
+      <field name='country_id' ref='base.uk'/>
+      <field name='digit_count'>11</field>
+      <field name='leading_digit'>0</field>
+    </record>
+
+    <!-- Germany mobile with trunk 0: 01XXXXXXXXX (11 digits) -->
+    <record id='phone_format_de' model='phone.country.format'>
+      <field name='country_id' ref='base.de'/>
+      <field name='digit_count'>11</field>
+      <field name='leading_digit'>0</field>
+    </record>
+
+    <!-- France mobile: 06XXXXXXXX or 07XXXXXXXX (10 digits, starts with 0) -->
+    <record id='phone_format_fr' model='phone.country.format'>
+      <field name='country_id' ref='base.fr'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>0</field>
+    </record>
+
+    <record id='phone_format_it' model='phone.country.format'>
+      <field name='country_id' ref='base.it'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>3</field>
+    </record>
+
+    <!-- Spain mobile: 6X or 7X -->
+    <record id='phone_format_es' model='phone.country.format'>
+      <field name='country_id' ref='base.es'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>67</field>
+    </record>
+
+    <record id='phone_format_pt' model='phone.country.format'>
+      <field name='country_id' ref='base.pt'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <record id='phone_format_nl' model='phone.country.format'>
+      <field name='country_id' ref='base.nl'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <record id='phone_format_be' model='phone.country.format'>
+      <field name='country_id' ref='base.be'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>4</field>
+    </record>
+
+    <!-- Luxembourg mobile: 6X -->
+    <record id='phone_format_lu' model='phone.country.format'>
+      <field name='country_id' ref='base.lu'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <record id='phone_format_ch' model='phone.country.format'>
+      <field name='country_id' ref='base.ch'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <!-- Austria mobile: 6X (without trunk 0, 10 digits) -->
+    <record id='phone_format_at' model='phone.country.format'>
+      <field name='country_id' ref='base.at'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <record id='phone_format_se' model='phone.country.format'>
+      <field name='country_id' ref='base.se'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <!-- Norway mobile: 4X or 9X -->
+    <record id='phone_format_no' model='phone.country.format'>
+      <field name='country_id' ref='base.no'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>49</field>
+    </record>
+
+    <!-- Denmark mobile: 2X, 3X, 4X, 5X, 6X -->
+    <record id='phone_format_dk' model='phone.country.format'>
+      <field name='country_id' ref='base.dk'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>23456</field>
+    </record>
+
+    <!-- Finland mobile: 4X or 5X -->
+    <record id='phone_format_fi' model='phone.country.format'>
+      <field name='country_id' ref='base.fi'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>45</field>
+    </record>
+
+    <!-- Iceland mobile: 6X, 7X, 8X -->
+    <record id='phone_format_is' model='phone.country.format'>
+      <field name='country_id' ref='base.is'/>
+      <field name='digit_count'>7</field>
+      <field name='leading_digit'>678</field>
+    </record>
+
+    <record id='phone_format_ie' model='phone.country.format'>
+      <field name='country_id' ref='base.ie'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>8</field>
+    </record>
+
+    <!-- Poland mobile: 4X, 5X, 6X, 7X, 8X -->
+    <record id='phone_format_pl' model='phone.country.format'>
+      <field name='country_id' ref='base.pl'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>45678</field>
+    </record>
+
+    <!-- Czech mobile: 6X or 7X -->
+    <record id='phone_format_cz' model='phone.country.format'>
+      <field name='country_id' ref='base.cz'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>67</field>
+    </record>
+
+    <record id='phone_format_sk' model='phone.country.format'>
+      <field name='country_id' ref='base.sk'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- Hungary mobile prefixes: 20, 30, 31, 50, 70 → first digits 2, 3, 5, 7 -->
+    <record id='phone_format_hu' model='phone.country.format'>
+      <field name='country_id' ref='base.hu'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>2357</field>
+    </record>
+
+    <record id='phone_format_ro' model='phone.country.format'>
+      <field name='country_id' ref='base.ro'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <!-- Bulgaria mobile: 8X or 9X -->
+    <record id='phone_format_bg' model='phone.country.format'>
+      <field name='country_id' ref='base.bg'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>89</field>
+    </record>
+
+    <record id='phone_format_gr' model='phone.country.format'>
+      <field name='country_id' ref='base.gr'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <record id='phone_format_hr' model='phone.country.format'>
+      <field name='country_id' ref='base.hr'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- Slovenia mobile prefixes: 30, 31, 40, 41, 51, 64, 65, 68, 70, 71 → 3,4,5,6,7 -->
+    <record id='phone_format_si' model='phone.country.format'>
+      <field name='country_id' ref='base.si'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>34567</field>
+    </record>
+
+    <record id='phone_format_rs' model='phone.country.format'>
+      <field name='country_id' ref='base.rs'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <record id='phone_format_ba' model='phone.country.format'>
+      <field name='country_id' ref='base.ba'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <record id='phone_format_me' model='phone.country.format'>
+      <field name='country_id' ref='base.me'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <record id='phone_format_mk' model='phone.country.format'>
+      <field name='country_id' ref='base.mk'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <record id='phone_format_al' model='phone.country.format'>
+      <field name='country_id' ref='base.al'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <!-- Estonia mobile: 5X (most) or 8X -->
+    <record id='phone_format_ee' model='phone.country.format'>
+      <field name='country_id' ref='base.ee'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>58</field>
+    </record>
+
+    <record id='phone_format_lv' model='phone.country.format'>
+      <field name='country_id' ref='base.lv'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>2</field>
+    </record>
+
+    <record id='phone_format_lt' model='phone.country.format'>
+      <field name='country_id' ref='base.lt'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <!-- Moldova mobile: 6X or 7X -->
+    <record id='phone_format_md' model='phone.country.format'>
+      <field name='country_id' ref='base.md'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>67</field>
+    </record>
+
+    <!-- Ukraine mobile: 3X, 5X, 6X, 9X (e.g. 39, 50, 63, 66, 67, 68, 73, 91-99) -->
+    <record id='phone_format_ua' model='phone.country.format'>
+      <field name='country_id' ref='base.ua'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>3569</field>
+    </record>
+
+    <!-- Belarus mobile prefixes: 25, 29, 33, 44 → first digits 2, 3, 4 -->
+    <record id='phone_format_by' model='phone.country.format'>
+      <field name='country_id' ref='base.by'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>234</field>
+    </record>
+
+    <record id='phone_format_ru' model='phone.country.format'>
+      <field name='country_id' ref='base.ru'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <record id='phone_format_cy' model='phone.country.format'>
+      <field name='country_id' ref='base.cy'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- Malta mobile: 7X or 9X -->
+    <record id='phone_format_mt' model='phone.country.format'>
+      <field name='country_id' ref='base.mt'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>79</field>
+    </record>
+
+    <!-- ── AMERICAS ───────────────────────────────────────────── -->
+    <!-- NANP countries (US/CA/DO/PR): area codes start 2-9, no single rule -->
+    <record id='phone_format_us' model='phone.country.format'>
+      <field name='country_id' ref='base.us'/>
+      <field name='digit_count'>10</field>
+    </record>
+
+    <record id='phone_format_ca' model='phone.country.format'>
+      <field name='country_id' ref='base.ca'/>
+      <field name='digit_count'>10</field>
+    </record>
+
+    <record id='phone_format_mx' model='phone.country.format'>
+      <field name='country_id' ref='base.mx'/>
+      <field name='digit_count'>10</field>
+    </record>
+
+    <!-- Brazil mobile: 11 digits (area code + 9 + 8-digit subscriber) -->
+    <record id='phone_format_br' model='phone.country.format'>
+      <field name='country_id' ref='base.br'/>
+      <field name='digit_count'>11</field>
+    </record>
+
+    <record id='phone_format_ar' model='phone.country.format'>
+      <field name='country_id' ref='base.ar'/>
+      <field name='digit_count'>10</field>
+    </record>
+
+    <record id='phone_format_cl' model='phone.country.format'>
+      <field name='country_id' ref='base.cl'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <record id='phone_format_co' model='phone.country.format'>
+      <field name='country_id' ref='base.co'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>3</field>
+    </record>
+
+    <record id='phone_format_pe' model='phone.country.format'>
+      <field name='country_id' ref='base.pe'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <record id='phone_format_ve' model='phone.country.format'>
+      <field name='country_id' ref='base.ve'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>4</field>
+    </record>
+
+    <record id='phone_format_ec' model='phone.country.format'>
+      <field name='country_id' ref='base.ec'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <record id='phone_format_uy' model='phone.country.format'>
+      <field name='country_id' ref='base.uy'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <record id='phone_format_py' model='phone.country.format'>
+      <field name='country_id' ref='base.py'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- Bolivia mobile: 6X or 7X -->
+    <record id='phone_format_bo' model='phone.country.format'>
+      <field name='country_id' ref='base.bo'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>67</field>
+    </record>
+
+    <!-- Costa Rica mobile: 6X, 7X, 8X -->
+    <record id='phone_format_cr' model='phone.country.format'>
+      <field name='country_id' ref='base.cr'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>678</field>
+    </record>
+
+    <record id='phone_format_pa' model='phone.country.format'>
+      <field name='country_id' ref='base.pa'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <!-- Guatemala mobile: 3X, 4X, 5X -->
+    <record id='phone_format_gt' model='phone.country.format'>
+      <field name='country_id' ref='base.gt'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>345</field>
+    </record>
+
+    <!-- Honduras mobile: 3X or 9X -->
+    <record id='phone_format_hn' model='phone.country.format'>
+      <field name='country_id' ref='base.hn'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>39</field>
+    </record>
+
+    <record id='phone_format_cu' model='phone.country.format'>
+      <field name='country_id' ref='base.cu'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>5</field>
+    </record>
+
+    <record id='phone_format_do' model='phone.country.format'>
+      <field name='country_id' ref='base.do'/>
+      <field name='digit_count'>10</field>
+    </record>
+
+    <record id='phone_format_pr' model='phone.country.format'>
+      <field name='country_id' ref='base.pr'/>
+      <field name='digit_count'>10</field>
+    </record>
+
+    <!-- ── ASIA ───────────────────────────────────────────────── -->
+    <record id='phone_format_cn' model='phone.country.format'>
+      <field name='country_id' ref='base.cn'/>
+      <field name='digit_count'>11</field>
+      <field name='leading_digit'>1</field>
+    </record>
+
+    <!-- India mobile: 6X, 7X, 8X, 9X -->
+    <record id='phone_format_in' model='phone.country.format'>
+      <field name='country_id' ref='base.in'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>6789</field>
+    </record>
+
+    <record id='phone_format_pk' model='phone.country.format'>
+      <field name='country_id' ref='base.pk'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>3</field>
+    </record>
+
+    <record id='phone_format_bd' model='phone.country.format'>
+      <field name='country_id' ref='base.bd'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>1</field>
+    </record>
+
+    <record id='phone_format_id' model='phone.country.format'>
+      <field name='country_id' ref='base.id'/>
+      <field name='digit_count'>11</field>
+      <field name='leading_digit'>8</field>
+    </record>
+
+    <record id='phone_format_ph' model='phone.country.format'>
+      <field name='country_id' ref='base.ph'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- Vietnam mobile (no trunk): 3X, 5X, 7X, 8X, 9X -->
+    <record id='phone_format_vn' model='phone.country.format'>
+      <field name='country_id' ref='base.vn'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>35789</field>
+    </record>
+
+    <!-- Thailand mobile (no trunk 0): 6X, 8X, 9X -->
+    <record id='phone_format_th' model='phone.country.format'>
+      <field name='country_id' ref='base.th'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>689</field>
+    </record>
+
+    <record id='phone_format_my' model='phone.country.format'>
+      <field name='country_id' ref='base.my'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>1</field>
+    </record>
+
+    <!-- Singapore mobile: 8X or 9X -->
+    <record id='phone_format_sg' model='phone.country.format'>
+      <field name='country_id' ref='base.sg'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>89</field>
+    </record>
+
+    <!-- Hong Kong mobile: 5X, 6X, 9X -->
+    <record id='phone_format_hk' model='phone.country.format'>
+      <field name='country_id' ref='base.hk'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>569</field>
+    </record>
+
+    <!-- Taiwan mobile with trunk 0: 09XXXXXXXX (10 digits) -->
+    <record id='phone_format_tw' model='phone.country.format'>
+      <field name='country_id' ref='base.tw'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>0</field>
+    </record>
+
+    <!-- South Korea mobile with trunk 0: 010-XXXX-XXXX (10 digits) -->
+    <record id='phone_format_kr' model='phone.country.format'>
+      <field name='country_id' ref='base.kr'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>0</field>
+    </record>
+
+    <!-- Japan mobile (no trunk 0): 70, 80, 90 → first digit 7, 8, or 9 -->
+    <record id='phone_format_jp' model='phone.country.format'>
+      <field name='country_id' ref='base.jp'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>789</field>
+    </record>
+
+    <record id='phone_format_kh' model='phone.country.format'>
+      <field name='country_id' ref='base.kh'/>
+      <field name='digit_count'>9</field>
+    </record>
+
+    <record id='phone_format_la' model='phone.country.format'>
+      <field name='country_id' ref='base.la'/>
+      <field name='digit_count'>10</field>
+    </record>
+
+    <!-- Myanmar mobile: 9X -->
+    <record id='phone_format_mm' model='phone.country.format'>
+      <field name='country_id' ref='base.mm'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <record id='phone_format_lk' model='phone.country.format'>
+      <field name='country_id' ref='base.lk'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <record id='phone_format_np' model='phone.country.format'>
+      <field name='country_id' ref='base.np'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <record id='phone_format_kz' model='phone.country.format'>
+      <field name='country_id' ref='base.kz'/>
+      <field name='digit_count'>10</field>
+      <field name='leading_digit'>7</field>
+    </record>
+
+    <record id='phone_format_uz' model='phone.country.format'>
+      <field name='country_id' ref='base.uz'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- Kyrgyzstan mobile: 5X, 7X, 9X -->
+    <record id='phone_format_kg' model='phone.country.format'>
+      <field name='country_id' ref='base.kg'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>579</field>
+    </record>
+
+    <record id='phone_format_tj' model='phone.country.format'>
+      <field name='country_id' ref='base.tj'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>9</field>
+    </record>
+
+    <!-- Turkmenistan mobile: 6X -->
+    <record id='phone_format_tm' model='phone.country.format'>
+      <field name='country_id' ref='base.tm'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>6</field>
+    </record>
+
+    <!-- Mongolia mobile: 8X or 9X -->
+    <record id='phone_format_mn' model='phone.country.format'>
+      <field name='country_id' ref='base.mn'/>
+      <field name='digit_count'>8</field>
+      <field name='leading_digit'>89</field>
+    </record>
+
+    <!-- Maldives mobile: 7X or 9X -->
+    <record id='phone_format_mv' model='phone.country.format'>
+      <field name='country_id' ref='base.mv'/>
+      <field name='digit_count'>7</field>
+      <field name='leading_digit'>79</field>
+    </record>
+
+    <!-- ── OCEANIA ────────────────────────────────────────────── -->
+    <record id='phone_format_au' model='phone.country.format'>
+      <field name='country_id' ref='base.au'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>4</field>
+    </record>
+
+    <record id='phone_format_nz' model='phone.country.format'>
+      <field name='country_id' ref='base.nz'/>
+      <field name='digit_count'>9</field>
+      <field name='leading_digit'>2</field>
+    </record>
+
+  </data>
+</odoo>

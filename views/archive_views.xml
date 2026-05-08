@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <data>
+
+    <!-- ══════════════════════════════════════════════════════
+         ARCHIVE VIEWS — Soft-deleted students
+         Manager: sees all, can restore
+         Employee: sees only own deletions, read-only
+    ══════════════════════════════════════════════════════ -->
+
+    <!-- ── LIST VIEW ──────────────────────────────────────── -->
+    <record id='view_student_archive_tree' model='ir.ui.view'>
+      <field name='name'>student.archive.tree</field>
+      <field name='model'>student.archive</field>
+      <field name='arch' type='xml'>
+        <list string='Archived Students' create='false' delete='false' edit='false'>
+          <field name='name'/>
+          <field name='specialization_display' string='Specialization'/>
+          <field name='degree_level'/>
+          <field name='phone_full'/>
+          <field name='email'/>
+          <field name='deleted_date' string='Deleted On'/>
+          <field name='delete_reason' string='Reason'/>
+          <field name='deleted_by' string='Deleted By'/>
+          <field name='user_id' string='Was Assigned To'/>
+          <field name='can_restore' invisible='1'/>
+          <!-- Restore button - visible in list for quick access -->
+          <button name='action_restore'
+                  type='object'
+                  icon='fa-undo'
+                  title='Restore Student'
+                  invisible='not can_restore'/>
+        </list>
+      </field>
+    </record>
+
+    <!-- ── FORM VIEW (MANAGER) ────────────────────────────── -->
+    <record id='view_student_archive_form' model='ir.ui.view'>
+      <field name='name'>student.archive.form</field>
+      <field name='model'>student.archive</field>
+      <field name='arch' type='xml'>
+        <form string='Archived Student' create='false' delete='false' edit='false'>
+          <header>
+            <!-- Restore button — visible to users who can restore -->
+            <button name='action_restore'
+                    type='object'
+                    string='Restore Student'
+                    class='btn-primary'
+                    icon='fa-undo'
+                    invisible='not can_restore'
+                    groups='university_crm.group_university_employee,university_crm.group_university_manager'/>
+          </header>
+          <sheet>
+            <div class='oe_title'>
+              <h1>
+                <field name='name' readonly='1'/>
+              </h1>
+            </div>
+
+            <!-- Deletion info banner -->
+            <group string='Deletion Information'>
+              <field name='can_restore' invisible='1'/>
+              <group>
+                <field name='deleted_date' readonly='1'/>
+                <field name='deleted_by' readonly='1'/>
+              </group>
+              <group>
+                <field name='delete_reason' readonly='1'/>
+                <field name='delete_reason_text' readonly='1'
+                       invisible="delete_reason != 'other'"/>
+              </group>
+            </group>
+
+            <!-- Original student data -->
+            <group string='Student Information'>
+              <group>
+                <field name='phone_country_id' readonly='1'/>
+                <field name='phone' readonly='1'/>
+                <field name='phone_full' readonly='1'/>
+                <field name='phone2' readonly='1'/>
+                <field name='email' readonly='1'/>
+                <field name='country_id' readonly='1'/>
+              </group>
+              <group>
+                <field name='degree_level' readonly='1'/>
+                <field name='specialization' readonly='1'/>
+                <field name='specialization_other' readonly='1'
+                       invisible="specialization != 'other'"/>
+                <field name='status' readonly='1'/>
+                <field name='user_id' readonly='1'/>
+                <field name='date_contacted' readonly='1'/>
+                <field name='follow_up_date' readonly='1'/>
+              </group>
+            </group>
+
+            <group string='Budget'>
+              <group>
+                <field name='currency_id' readonly='1'/>
+                <field name='budget_amount' readonly='1'/>
+              </group>
+              <group>
+                <field name='budget_min' readonly='1'/>
+                <field name='budget_max' readonly='1'/>
+              </group>
+            </group>
+
+            <notebook>
+              <page string='Notes'>
+                <field name='notes' readonly='1'/>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- ── SEARCH VIEW ────────────────────────────────────── -->
+    <record id='view_student_archive_search' model='ir.ui.view'>
+      <field name='name'>student.archive.search</field>
+      <field name='model'>student.archive</field>
+      <field name='arch' type='xml'>
+        <search string='Search Archived Students'>
+          <field name='name'/>
+          <field name='email'/>
+          <field name='phone_full'/>
+          <field name='deleted_by'/>
+          <filter name='filter_my_deletions'
+                  string='My Deletions'
+                  domain="[('deleted_by', '=', uid)]"/>
+          <group expand='0' string='Group By'>
+            <filter name='group_reason'
+                    string='Reason'
+                    context="{'group_by': 'delete_reason'}"/>
+            <filter name='group_deleted_by'
+                    string='Deleted By'
+                    context="{'group_by': 'deleted_by'}"/>
+            <filter name='group_date'
+                    string='Deletion Date'
+                    context="{'group_by': 'deleted_date:month'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <!-- ── ACTION: ALL ARCHIVED STUDENTS (Manager) ────────── -->
+    <record id='action_student_archive' model='ir.actions.act_window'>
+      <field name='name'>Archived Students</field>
+      <field name='res_model'>student.archive</field>
+      <field name='view_mode'>list,form</field>
+      <field name='help' type='html'>
+        <p class='o_view_nocontent_smiling_face'>
+          No archived students yet.
+        </p>
+        <p>Deleted students will appear here.</p>
+      </field>
+    </record>
+
+    <!-- ── ACTION: MY ARCHIVED STUDENTS (Employee) ────────── -->
+    <record id='action_student_archive_employee' model='ir.actions.act_window'>
+      <field name='name'>My Archived Students</field>
+      <field name='res_model'>student.archive</field>
+      <field name='view_mode'>list,form</field>
+      <field name='domain'>[('deleted_by', '=', uid)]</field>
+      <field name='help' type='html'>
+        <p class='o_view_nocontent_smiling_face'>
+          No archived students.
+        </p>
+        <p>Students you delete will appear here.</p>
+      </field>
+    </record>
+
+  </data>
+</odoo>

@@ -1,0 +1,1023 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <!-- ══════════════════════════════════════════════════════
+         SHARED STYLES — injected into every student page
+    ══════════════════════════════════════════════════════ -->
+    <template id="student_portal_assets" name="Student Portal Assets">
+      <t t-call="web.layout">
+        <t t-set="head">
+          <link rel="preconnect" href="https://fonts.googleapis.com"/>
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+          <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+          <style>
+            :root {
+              --navy:   #162340;
+              --navy2:  #1e3152;
+              --gold:   #B8966A;
+              --gold2:  #d4b48a;
+              --cream:  #F7F5F0;
+              --white:  #ffffff;
+              --text:   #1a1a2e;
+              --muted:  #6b7280;
+              --border: #e5e0d8;
+              --green:  #16a34a;
+              --red:    #dc2626;
+              --blue:   #1d4ed8;
+              --shadow: 0 4px 24px rgba(22,35,64,.10);
+              --shadow-lg: 0 12px 48px rgba(22,35,64,.16);
+            }
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            body {
+              font-family: 'Plus Jakarta Sans', sans-serif;
+              background: var(--cream);
+              color: var(--text);
+              min-height: 100vh;
+            }
+            h1,h2,h3,h4 { font-family: 'Sora', sans-serif; }
+            a { color: inherit; text-decoration: none; }
+
+            /* ── AUTH PAGES ── */
+            .auth-page {
+              min-height: 100vh;
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+            }
+            @media(max-width:768px){
+              .auth-page { grid-template-columns: 1fr; }
+              .auth-left  { display: none; }
+            }
+            .auth-left {
+              background: var(--navy);
+              display: flex; flex-direction: column;
+              justify-content: center; align-items: center;
+              padding: 60px 48px;
+              position: relative; overflow: hidden;
+            }
+            .auth-left::before {
+              content: '';
+              position: absolute; inset: 0;
+              background: radial-gradient(ellipse at 30% 50%, rgba(184,150,106,.18) 0%, transparent 70%),
+                          radial-gradient(ellipse at 80% 20%, rgba(184,150,106,.10) 0%, transparent 60%);
+            }
+            .auth-left-content { position: relative; z-index: 1; text-align: center; }
+            .auth-logo {
+              width: 64px; height: 64px;
+              background: var(--gold);
+              border-radius: 16px;
+              display: flex; align-items: center; justify-content: center;
+              margin: 0 auto 24px;
+              font-family: 'Sora', sans-serif;
+              font-size: 1.5rem; font-weight: 700;
+              color: var(--navy);
+            }
+            .auth-left h1 {
+              color: var(--white); font-size: 2rem;
+              font-weight: 700; margin-bottom: 12px;
+            }
+            .auth-left p {
+              color: rgba(255,255,255,.6);
+              font-size: .95rem; line-height: 1.7;
+              max-width: 300px; margin: 0 auto;
+            }
+            .auth-steps {
+              margin-top: 48px;
+              display: flex; flex-direction: column; gap: 16px;
+              text-align: left;
+            }
+            .auth-step {
+              display: flex; align-items: flex-start; gap: 14px;
+            }
+            .auth-step-icon {
+              width: 36px; height: 36px; border-radius: 50%;
+              background: rgba(184,150,106,.2); border: 1px solid rgba(184,150,106,.4);
+              display: flex; align-items: center; justify-content: center;
+              color: var(--gold); font-size: .85rem; flex-shrink: 0;
+            }
+            .auth-step-text strong {
+              color: var(--white); font-size: .9rem; display: block;
+            }
+            .auth-step-text span {
+              color: rgba(255,255,255,.5); font-size: .8rem;
+            }
+
+            .auth-right {
+              display: flex; align-items: center; justify-content: center;
+              padding: 40px 32px;
+              background: var(--cream);
+            }
+            .auth-card {
+              width: 100%; max-width: 420px;
+            }
+            .auth-card-header { margin-bottom: 32px; }
+            .auth-card-header h2 {
+              font-size: 1.6rem; font-weight: 700; color: var(--navy);
+              margin-bottom: 6px;
+            }
+            .auth-card-header p { color: var(--muted); font-size: .9rem; }
+            .form-field { margin-bottom: 18px; }
+            .form-field label {
+              display: block; font-size: .82rem; font-weight: 600;
+              color: var(--navy); margin-bottom: 6px;
+              text-transform: uppercase; letter-spacing: .04em;
+            }
+            .form-field input {
+              width: 100%; padding: 12px 16px;
+              border: 1.5px solid var(--border);
+              border-radius: 10px;
+              font-family: 'Plus Jakarta Sans', sans-serif;
+              font-size: .95rem; color: var(--text);
+              background: var(--white);
+              transition: border-color .2s, box-shadow .2s;
+              outline: none;
+            }
+            .form-field input:focus {
+              border-color: var(--gold);
+              box-shadow: 0 0 0 3px rgba(184,150,106,.12);
+            }
+            .btn-primary {
+              width: 100%; padding: 13px;
+              background: var(--navy); color: var(--white);
+              border: none; border-radius: 10px;
+              font-family: 'Sora', sans-serif;
+              font-size: .95rem; font-weight: 600;
+              cursor: pointer; transition: background .2s, transform .1s;
+              margin-top: 4px;
+            }
+            .btn-primary:hover { background: var(--navy2); }
+            .btn-primary:active { transform: scale(.99); }
+            .btn-gold {
+              background: var(--gold); color: var(--navy);
+            }
+            .btn-gold:hover { background: var(--gold2); }
+            .alert-error {
+              padding: 12px 16px;
+              background: #fef2f2; border: 1px solid #fecaca;
+              border-radius: 8px; color: var(--red);
+              font-size: .88rem; margin-bottom: 18px;
+              display: flex; align-items: center; gap: 8px;
+            }
+            .alert-info {
+              padding: 12px 16px;
+              background: #eff6ff; border: 1px solid #bfdbfe;
+              border-radius: 8px; color: var(--blue);
+              font-size: .88rem; margin-bottom: 18px;
+            }
+            .divider {
+              display: flex; align-items: center; gap: 12px;
+              margin: 20px 0; color: var(--muted); font-size: .82rem;
+            }
+            .divider::before, .divider::after {
+              content: ''; flex: 1; height: 1px; background: var(--border);
+            }
+
+            /* ── DASHBOARD ── */
+            .dash-wrap {
+              min-height: 100vh;
+              display: flex; flex-direction: column;
+            }
+            .dash-nav {
+              background: var(--navy);
+              padding: 0 32px;
+              height: 62px;
+              display: flex; align-items: center;
+              justify-content: space-between;
+              position: sticky; top: 0; z-index: 100;
+              box-shadow: 0 2px 16px rgba(0,0,0,.25);
+            }
+            .dash-nav-brand {
+              display: flex; align-items: center; gap: 12px;
+            }
+            .dash-nav-logo {
+              width: 36px; height: 36px; background: var(--gold);
+              border-radius: 8px; display: flex; align-items: center;
+              justify-content: center; font-family: 'Sora', sans-serif;
+              font-weight: 700; font-size: .9rem; color: var(--navy);
+            }
+            .dash-nav-title {
+              font-family: 'Sora', sans-serif;
+              color: var(--white); font-weight: 600; font-size: 1rem;
+            }
+            .dash-nav-subtitle {
+              color: rgba(255,255,255,.45);
+              font-size: .75rem; margin-top: 1px;
+            }
+            .dash-nav-right {
+              display: flex; align-items: center; gap: 16px;
+            }
+            .dash-student-name {
+              color: rgba(255,255,255,.8); font-size: .88rem;
+            }
+            .dash-logout {
+              padding: 6px 16px;
+              border: 1px solid rgba(255,255,255,.2);
+              border-radius: 6px; color: rgba(255,255,255,.7);
+              font-size: .82rem; cursor: pointer;
+              transition: all .2s; background: none;
+              font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            .dash-logout:hover {
+              background: rgba(255,255,255,.08);
+              color: var(--white);
+            }
+
+            .dash-body {
+              flex: 1; padding: 32px;
+              max-width: 1100px; margin: 0 auto; width: 100%;
+            }
+
+            /* Progress bar */
+            .progress-card {
+              background: var(--white); border-radius: 16px;
+              padding: 28px 32px; margin-bottom: 24px;
+              box-shadow: var(--shadow);
+            }
+            .progress-label {
+              font-size: .78rem; font-weight: 600; color: var(--muted);
+              text-transform: uppercase; letter-spacing: .08em;
+              margin-bottom: 20px;
+            }
+            .progress-steps {
+              display: flex; align-items: center;
+            }
+            .progress-step {
+              display: flex; flex-direction: column; align-items: center;
+              flex: 1; position: relative;
+            }
+            .progress-step:not(:last-child)::after {
+              content: '';
+              position: absolute;
+              top: 18px; left: 50%; right: -50%;
+              height: 2px; background: var(--border);
+              z-index: 0;
+            }
+            .progress-step.done:not(:last-child)::after,
+            .progress-step.active:not(:last-child)::after {
+              background: var(--gold);
+            }
+            .ps-dot {
+              width: 36px; height: 36px; border-radius: 50%;
+              background: var(--border); border: 2px solid var(--border);
+              display: flex; align-items: center; justify-content: center;
+              font-size: .8rem; font-weight: 700;
+              color: var(--muted); z-index: 1; position: relative;
+              transition: all .3s;
+            }
+            .progress-step.done .ps-dot {
+              background: var(--gold); border-color: var(--gold);
+              color: var(--navy);
+            }
+            .progress-step.active .ps-dot {
+              background: var(--navy); border-color: var(--navy);
+              color: var(--white);
+              box-shadow: 0 0 0 4px rgba(22,35,64,.15);
+            }
+            .progress-step.lost .ps-dot {
+              background: var(--red); border-color: var(--red);
+              color: var(--white);
+            }
+            .ps-name {
+              margin-top: 8px;
+              font-size: .72rem; font-weight: 600; color: var(--muted);
+              text-align: center; text-transform: uppercase;
+              letter-spacing: .04em;
+            }
+            .progress-step.done .ps-name,
+            .progress-step.active .ps-name { color: var(--navy); }
+
+            /* Info cards */
+            .info-grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+              gap: 20px; margin-bottom: 24px;
+            }
+            .info-card {
+              background: var(--white); border-radius: 16px;
+              padding: 24px; box-shadow: var(--shadow);
+            }
+            .info-card-header {
+              display: flex; align-items: center; gap: 10px;
+              margin-bottom: 18px;
+              padding-bottom: 14px;
+              border-bottom: 1px solid var(--border);
+            }
+            .info-card-icon {
+              width: 36px; height: 36px; border-radius: 10px;
+              background: rgba(184,150,106,.1);
+              display: flex; align-items: center; justify-content: center;
+              font-size: .95rem;
+            }
+            .info-card-title {
+              font-family: 'Sora', sans-serif;
+              font-size: .92rem; font-weight: 600; color: var(--navy);
+            }
+            .info-row {
+              display: flex; justify-content: space-between;
+              align-items: baseline;
+              padding: 7px 0; font-size: .88rem;
+              border-bottom: 1px solid #f9f7f4;
+            }
+            .info-row:last-child { border-bottom: none; }
+            .ir-label { color: var(--muted); font-size: .82rem; }
+            .ir-value { font-weight: 500; color: var(--navy); text-align: right; }
+
+            /* Status badge */
+            .status-badge {
+              display: inline-flex; align-items: center; gap: 6px;
+              padding: 4px 12px; border-radius: 20px;
+              font-size: .75rem; font-weight: 600;
+            }
+            .sb-new      { background: #dbeafe; color: #1d4ed8; }
+            .sb-options_sent { background: #ffedd5; color: #c2410c; }
+            .sb-chosen   { background: #ede9fe; color: #7c3aed; }
+            .sb-docs     { background: #fef9c3; color: #a16207; }
+            .sb-enrolled { background: #dcfce7; color: #16a34a; }
+            .sb-lost     { background: #fee2e2; color: #dc2626; }
+
+            /* Documents section */
+            .docs-card {
+              background: var(--white); border-radius: 16px;
+              padding: 24px; box-shadow: var(--shadow);
+              margin-bottom: 24px;
+            }
+            .docs-header {
+              display: flex; justify-content: space-between;
+              align-items: center; margin-bottom: 20px;
+              padding-bottom: 14px;
+              border-bottom: 1px solid var(--border);
+            }
+            .docs-title {
+              font-family: 'Sora', sans-serif;
+              font-size: 1rem; font-weight: 600; color: var(--navy);
+              display: flex; align-items: center; gap: 10px;
+            }
+            .docs-count {
+              background: var(--navy); color: var(--white);
+              border-radius: 20px; padding: 2px 10px;
+              font-size: .75rem; font-weight: 600;
+            }
+
+            /* Upload zone */
+            .upload-zone {
+              border: 2px dashed var(--border);
+              border-radius: 12px; padding: 28px 24px;
+              text-align: center; margin-bottom: 20px;
+              transition: border-color .2s, background .2s;
+              cursor: pointer;
+            }
+            .upload-zone:hover {
+              border-color: var(--gold);
+              background: rgba(184,150,106,.03);
+            }
+            .upload-icon { font-size: 2rem; margin-bottom: 10px; }
+            .upload-text {
+              font-size: .9rem; color: var(--muted); margin-bottom: 12px;
+            }
+            .upload-text strong { color: var(--navy); }
+            .upload-btn-wrap {
+              display: flex; gap: 10px; align-items: center;
+              justify-content: center; flex-wrap: wrap;
+            }
+            .btn-upload {
+              padding: 10px 24px;
+              background: var(--navy); color: var(--white);
+              border: none; border-radius: 8px;
+              font-family: 'Plus Jakarta Sans', sans-serif;
+              font-size: .88rem; font-weight: 600;
+              cursor: pointer; transition: background .2s;
+            }
+            .btn-upload:hover { background: var(--navy2); }
+            .file-name-display {
+              font-size: .82rem; color: var(--muted);
+            }
+
+            /* Doc list */
+            .doc-list { display: flex; flex-direction: column; gap: 10px; }
+            .doc-item {
+              display: flex; justify-content: space-between;
+              align-items: center; padding: 14px 16px;
+              background: #fafaf9; border-radius: 10px;
+              border: 1px solid var(--border);
+              transition: background .2s;
+            }
+            .doc-item:hover { background: #f5f3f0; }
+            .doc-info { display: flex; align-items: center; gap: 12px; }
+            .doc-icon {
+              width: 38px; height: 38px; border-radius: 8px;
+              background: rgba(22,35,64,.06);
+              display: flex; align-items: center; justify-content: center;
+              font-size: 1.1rem;
+            }
+            .doc-name { font-weight: 500; font-size: .88rem; color: var(--navy); }
+            .doc-meta { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+            .btn-download {
+              padding: 6px 16px;
+              background: var(--navy); color: var(--white);
+              border-radius: 6px; font-size: .8rem; font-weight: 500;
+              text-decoration: none; transition: background .2s;
+            }
+            .btn-download:hover { background: var(--navy2); color: var(--white); }
+
+            .no-docs {
+              text-align: center; padding: 32px;
+              color: var(--muted); font-size: .9rem;
+            }
+            .no-docs-icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+            /* Notes */
+            .notes-card {
+              background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+              border-radius: 16px; padding: 24px;
+              box-shadow: var(--shadow-lg);
+              margin-bottom: 24px;
+            }
+            .notes-card-label {
+              font-size: .75rem; font-weight: 600;
+              color: rgba(255,255,255,.45);
+              text-transform: uppercase; letter-spacing: .08em;
+              margin-bottom: 10px;
+              display: flex; align-items: center; gap: 6px;
+            }
+            .notes-card-text {
+              color: rgba(255,255,255,.85); font-size: .9rem;
+              line-height: 1.7;
+            }
+
+            /* Password strength */
+            .strength-bar {
+              height: 4px; border-radius: 4px;
+              background: var(--border); margin-top: 8px;
+              overflow: hidden;
+            }
+            .strength-fill {
+              height: 100%; border-radius: 4px;
+              transition: width .3s, background .3s;
+              width: 0%;
+            }
+            .strength-text {
+              font-size: .75rem; margin-top: 4px; color: var(--muted);
+            }
+          </style>
+        </t>
+        <t t-out="0"/>
+      </t>
+    </template>
+
+    <!-- ══════════════════════════════════════════════════════
+         LOGIN PAGE
+    ══════════════════════════════════════════════════════ -->
+    <template id="student_login" name="Student Login">
+      <t t-call="web.layout">
+        <t t-set="head_title">Student Login — University CRM</t>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+        <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+        <style>
+          :root{--navy:#162340;--navy2:#1e3152;--gold:#B8966A;--gold2:#d4b48a;--cream:#F7F5F0;--white:#ffffff;--text:#1a1a2e;--muted:#6b7280;--border:#e5e0d8;--red:#dc2626;--blue:#1d4ed8;}
+          *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+          body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+          h1,h2,h3,h4{font-family:'Sora',sans-serif;}
+          .auth-page{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;}
+          @media(max-width:768px){.auth-page{grid-template-columns:1fr;}.auth-left{display:none;}}
+          .auth-left{background:var(--navy);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 48px;position:relative;overflow:hidden;}
+          .auth-left::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(184,150,106,.18) 0%,transparent 70%),radial-gradient(ellipse at 80% 20%,rgba(184,150,106,.10) 0%,transparent 60%);}
+          .auth-left-content{position:relative;z-index:1;text-align:center;}
+          .auth-logo{width:64px;height:64px;background:var(--gold);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:700;color:var(--navy);}
+          .auth-left h1{color:var(--white);font-size:2rem;font-weight:700;margin-bottom:12px;}
+          .auth-left>div>p{color:rgba(255,255,255,.6);font-size:.95rem;line-height:1.7;max-width:300px;margin:0 auto;}
+          .auth-steps{margin-top:48px;display:flex;flex-direction:column;gap:16px;text-align:left;}
+          .auth-step{display:flex;align-items:flex-start;gap:14px;}
+          .auth-step-icon{width:36px;height:36px;border-radius:50%;background:rgba(184,150,106,.2);border:1px solid rgba(184,150,106,.4);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.85rem;flex-shrink:0;}
+          .auth-step-text strong{color:var(--white);font-size:.9rem;display:block;}
+          .auth-step-text span{color:rgba(255,255,255,.5);font-size:.8rem;}
+          .auth-right{display:flex;align-items:center;justify-content:center;padding:40px 32px;background:var(--cream);}
+          .auth-card{width:100%;max-width:420px;}
+          .auth-card-header{margin-bottom:32px;}
+          .auth-card-header h2{font-size:1.6rem;font-weight:700;color:var(--navy);margin-bottom:6px;}
+          .auth-card-header p{color:var(--muted);font-size:.9rem;}
+          .form-field{margin-bottom:18px;}
+          .form-field label{display:block;font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
+          .form-field input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--white);transition:border-color .2s,box-shadow .2s;outline:none;}
+          .form-field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,150,106,.12);}
+          .btn-primary{width:100%;padding:13px;background:var(--navy);color:var(--white);border:none;border-radius:10px;font-family:'Sora',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:background .2s,transform .1s;margin-top:4px;}
+          .btn-primary:hover{background:var(--navy2);}
+          .alert-error{padding:12px 16px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:var(--red);font-size:.88rem;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+          .help-text{text-align:center;margin-top:20px;font-size:.82rem;color:var(--muted);}
+        </style>
+
+        <div class="auth-page">
+          <!-- Left panel -->
+          <div class="auth-left">
+            <div class="auth-left-content">
+              <div class="auth-logo">U</div>
+              <h1>University CRM</h1>
+              <p>Your personal application portal — track your status and manage your documents.</p>
+
+              <div class="auth-steps">
+                <div class="auth-step">
+                  <div class="auth-step-icon">①</div>
+                  <div class="auth-step-text">
+                    <strong>Sign In</strong>
+                    <span>Use the email your advisor registered</span>
+                  </div>
+                </div>
+                <div class="auth-step">
+                  <div class="auth-step-icon">②</div>
+                  <div class="auth-step-text">
+                    <strong>Track Your Progress</strong>
+                    <span>See where your application stands</span>
+                  </div>
+                </div>
+                <div class="auth-step">
+                  <div class="auth-step-icon">③</div>
+                  <div class="auth-step-text">
+                    <strong>Upload Documents</strong>
+                    <span>Submit passport, transcript &amp; more</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right panel -->
+          <div class="auth-right">
+            <div class="auth-card">
+              <div class="auth-card-header">
+                <h2>Welcome back</h2>
+                <p>Sign in to your student portal</p>
+              </div>
+
+              <t t-if="error">
+                <div class="alert-error">
+                  ⚠ <span><t t-esc="error"/></span>
+                </div>
+              </t>
+
+              <form method="POST" action="/student/login">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="token" t-att-value="token"/>
+
+                <div class="form-field">
+                  <label for="email">Email Address</label>
+                  <input type="email" id="email" name="email"
+                         t-att-value="email"
+                         placeholder="your@email.com" required="required"
+                         autocomplete="email"/>
+                </div>
+
+                <div class="form-field">
+                  <label for="password">Password</label>
+                  <input type="password" id="password" name="password"
+                         placeholder="Enter your password" required="required"
+                         autocomplete="current-password"/>
+                </div>
+
+                <button type="submit" class="btn-primary">Sign In →</button>
+              </form>
+
+              <p class="help-text">
+                First time? Use the link your advisor sent you to set up your password.
+              </p>
+            </div>
+          </div>
+        </div>
+      </t>
+    </template>
+
+    <!-- ══════════════════════════════════════════════════════
+         SET / CHANGE PASSWORD PAGE
+    ══════════════════════════════════════════════════════ -->
+    <template id="student_set_password" name="Student Set Password">
+      <t t-call="web.layout">
+        <t t-set="head_title">Set Your Password — University CRM</t>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+        <style>
+          :root{--navy:#162340;--navy2:#1e3152;--gold:#B8966A;--cream:#F7F5F0;--white:#ffffff;--text:#1a1a2e;--muted:#6b7280;--border:#e5e0d8;--red:#dc2626;--green:#16a34a;}
+          *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+          body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;}
+          h1,h2,h3{font-family:'Sora',sans-serif;}
+          .set-pw-card{width:100%;max-width:460px;background:var(--white);border-radius:20px;padding:40px;box-shadow:0 8px 40px rgba(22,35,64,.12);}
+          .set-pw-icon{width:56px;height:56px;background:rgba(184,150,106,.12);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:20px;}
+          .set-pw-card h2{font-size:1.5rem;color:var(--navy);margin-bottom:8px;}
+          .set-pw-card p{color:var(--muted);font-size:.9rem;margin-bottom:28px;line-height:1.6;}
+          .student-info{background:#f8f7f4;border-radius:10px;padding:12px 16px;margin-bottom:24px;font-size:.88rem;}
+          .student-info span{color:var(--muted);}
+          .student-info strong{color:var(--navy);}
+          .form-field{margin-bottom:18px;}
+          .form-field label{display:block;font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
+          .form-field input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;color:var(--text);background:var(--white);transition:border-color .2s,box-shadow .2s;outline:none;}
+          .form-field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,150,106,.12);}
+          .strength-bar{height:4px;border-radius:4px;background:var(--border);margin-top:8px;overflow:hidden;}
+          .strength-fill{height:100%;border-radius:4px;transition:width .3s,background .3s;width:0%;}
+          .strength-text{font-size:.75rem;margin-top:4px;color:var(--muted);}
+          .btn-primary{width:100%;padding:13px;background:var(--navy);color:var(--white);border:none;border-radius:10px;font-family:'Sora',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:background .2s;margin-top:4px;}
+          .btn-primary:hover{background:var(--navy2);}
+          .alert-error{padding:12px 16px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:var(--red);font-size:.88rem;margin-bottom:18px;}
+          .req-list{font-size:.78rem;color:var(--muted);margin-top:8px;padding-left:16px;}
+          .req-list li{margin-bottom:3px;}
+        </style>
+
+        <div class="set-pw-card">
+          <div class="set-pw-icon">🔐</div>
+
+          <t t-if="is_first">
+            <h2>Create Your Password</h2>
+            <p>Welcome! You're signing in for the first time. Please create a secure password to access your application portal.</p>
+          </t>
+          <t t-else="">
+            <h2>Change Your Password</h2>
+            <p>Enter a new password for your student portal account.</p>
+          </t>
+
+          <div class="student-info">
+            <span>Account: </span>
+            <strong><t t-esc="student.name"/> (<t t-esc="student.email"/>)</strong>
+          </div>
+
+          <t t-if="error">
+            <div class="alert-error">⚠ <t t-esc="error"/></div>
+          </t>
+
+          <form t-attf-action="/student/set-password/#{token}" method="POST">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+            <div class="form-field">
+              <label for="password">New Password</label>
+              <input type="password" id="password" name="password"
+                     placeholder="At least 6 characters" required="required"
+                     autocomplete="new-password" oninput="checkStrength(this.value)"/>
+              <div class="strength-bar"><div class="strength-fill" id="sf"></div></div>
+              <div class="strength-text" id="st">Enter a password</div>
+            </div>
+
+            <div class="form-field">
+              <label for="password2">Confirm Password</label>
+              <input type="password" id="password2" name="password2"
+                     placeholder="Repeat password" required="required"
+                     autocomplete="new-password"/>
+            </div>
+
+            <ul class="req-list">
+              <li>Minimum 6 characters</li>
+              <li>Both fields must match</li>
+            </ul>
+
+            <br/>
+            <button type="submit" class="btn-primary">
+              <t t-if="is_first">Create Password &amp; Enter Portal →</t>
+              <t t-else="">Save New Password →</t>
+            </button>
+          </form>
+        </div>
+
+        <script>
+          function checkStrength(pw) {
+            var sf = document.getElementById('sf');
+            var st = document.getElementById('st');
+            var score = 0;
+            if (pw.length >= 6) score++;
+            if (pw.length >= 10) score++;
+            if (/[A-Z]/.test(pw)) score++;
+            if (/[0-9]/.test(pw)) score++;
+            if (/[^A-Za-z0-9]/.test(pw)) score++;
+            var colors = ['#dc2626','#f97316','#eab308','#16a34a','#16a34a'];
+            var labels = ['Too short','Weak','Fair','Good','Strong'];
+            var widths = ['20%','40%','60%','80%','100%'];
+            var i = Math.min(score, 4);
+            sf.style.width = pw.length ? widths[i] : '0%';
+            sf.style.background = colors[i];
+            st.textContent = pw.length ? labels[i] : 'Enter a password';
+          }
+        </script>
+      </t>
+    </template>
+
+    <!-- ══════════════════════════════════════════════════════
+         STUDENT DASHBOARD
+    ══════════════════════════════════════════════════════ -->
+    <template id="student_dashboard" name="Student Dashboard">
+      <t t-call="web.layout">
+        <t t-set="head_title">My Application — University CRM</t>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+        <style>
+          :root{--navy:#162340;--navy2:#1e3152;--gold:#B8966A;--gold2:#d4b48a;--cream:#F7F5F0;--white:#ffffff;--text:#1a1a2e;--muted:#6b7280;--border:#e5e0d8;--shadow:0 4px 24px rgba(22,35,64,.08);}
+          *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+          body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--text);}
+          h1,h2,h3,h4{font-family:'Sora',sans-serif;}
+          a{color:inherit;text-decoration:none;}
+
+          .dash-nav{background:var(--navy);padding:0 32px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25);}
+          .dash-nav-brand{display:flex;align-items:center;gap:12px;}
+          .nav-logo{width:36px;height:36px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:.9rem;color:var(--navy);}
+          .nav-title{font-family:'Sora',sans-serif;color:var(--white);font-weight:600;font-size:1rem;}
+          .nav-sub{color:rgba(255,255,255,.4);font-size:.72rem;margin-top:1px;}
+          .nav-right{display:flex;align-items:center;gap:14px;}
+          .nav-student{color:rgba(255,255,255,.75);font-size:.85rem;}
+          .nav-logout{padding:6px 16px;border:1px solid rgba(255,255,255,.2);border-radius:6px;color:rgba(255,255,255,.65);font-size:.8rem;cursor:pointer;transition:all .2s;background:none;font-family:'Plus Jakarta Sans',sans-serif;}
+          .nav-logout:hover{background:rgba(255,255,255,.08);color:var(--white);}
+
+          .dash-body{max-width:1060px;margin:0 auto;padding:32px 24px;}
+
+          /* Progress */
+          .progress-card{background:var(--white);border-radius:16px;padding:28px 32px;margin-bottom:24px;box-shadow:var(--shadow);}
+          .section-label{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:20px;}
+          .progress-track{display:flex;align-items:center;position:relative;}
+          .p-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
+          .p-step:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;right:-50%;height:2px;background:var(--border);z-index:0;}
+          .p-step.done:not(:last-child)::after,.p-step.current:not(:last-child)::after{background:var(--gold);}
+          .p-dot{width:32px;height:32px;border-radius:50%;background:var(--border);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--muted);z-index:1;position:relative;}
+          .p-step.done .p-dot{background:var(--gold);border-color:var(--gold);color:var(--navy);}
+          .p-step.current .p-dot{background:var(--navy);border-color:var(--navy);color:var(--white);box-shadow:0 0 0 4px rgba(22,35,64,.12);}
+          .p-step.lost .p-dot{background:#dc2626;border-color:#dc2626;color:var(--white);}
+          .p-name{margin-top:8px;font-size:.68rem;font-weight:600;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:.03em;max-width:70px;}
+          .p-step.done .p-name,.p-step.current .p-name{color:var(--navy);}
+
+          /* Info grid */
+          .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;margin-bottom:24px;}
+          .info-card{background:var(--white);border-radius:16px;padding:22px;box-shadow:var(--shadow);}
+          .ic-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+          .ic-icon{width:34px;height:34px;border-radius:9px;background:rgba(184,150,106,.1);display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+          .ic-title{font-family:'Sora',sans-serif;font-size:.88rem;font-weight:600;color:var(--navy);}
+          .ir{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;font-size:.85rem;border-bottom:1px solid #f5f3f0;}
+          .ir:last-child{border-bottom:none;}
+          .ir-l{color:var(--muted);font-size:.8rem;}
+          .ir-v{font-weight:500;color:var(--navy);text-align:right;max-width:60%;}
+
+          .sb{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600;}
+          .sb-new{background:#dbeafe;color:#1d4ed8;}
+          .sb-options_sent{background:#ffedd5;color:#c2410c;}
+          .sb-chosen{background:#ede9fe;color:#7c3aed;}
+          .sb-docs{background:#fef9c3;color:#a16207;}
+          .sb-enrolled{background:#dcfce7;color:#16a34a;}
+          .sb-lost{background:#fee2e2;color:#dc2626;}
+
+          /* Notes */
+          .notes-card{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);border-radius:16px;padding:22px;box-shadow:0 8px 32px rgba(22,35,64,.18);margin-bottom:24px;}
+          .nc-label{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+          .nc-text{color:rgba(255,255,255,.82);font-size:.9rem;line-height:1.7;}
+
+          /* Documents */
+          .docs-card{background:var(--white);border-radius:16px;padding:22px;box-shadow:var(--shadow);margin-bottom:24px;}
+          .docs-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+          .docs-title{font-family:'Sora',sans-serif;font-size:.95rem;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:8px;}
+          .count-badge{background:var(--navy);color:var(--white);border-radius:20px;padding:2px 9px;font-size:.72rem;font-weight:600;}
+          .upload-zone{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;margin-bottom:16px;cursor:pointer;transition:border-color .2s,background .2s;}
+          .upload-zone:hover{border-color:var(--gold);background:rgba(184,150,106,.03);}
+          .upload-zone input[type=file]{display:none;}
+          .upload-zone-label{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;}
+          .uz-icon{font-size:2rem;}
+          .uz-text{font-size:.88rem;color:var(--muted);}
+          .uz-text strong{color:var(--navy);}
+          .uz-file-name{font-size:.8rem;color:var(--gold);font-weight:500;margin-top:4px;}
+          .btn-submit{padding:10px 28px;background:var(--navy);color:var(--white);border:none;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .2s;display:block;width:100%;}
+          .btn-submit:hover{background:var(--navy2);}
+
+          .doc-list{display:flex;flex-direction:column;gap:10px;}
+          .doc-item{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#fafaf9;border-radius:10px;border:1px solid var(--border);}
+          .doc-info{display:flex;align-items:center;gap:12px;}
+          .doc-ico{width:36px;height:36px;border-radius:8px;background:rgba(22,35,64,.05);display:flex;align-items:center;justify-content:center;font-size:1rem;}
+          .doc-n{font-weight:500;font-size:.86rem;color:var(--navy);}
+          .doc-m{font-size:.73rem;color:var(--muted);margin-top:2px;}
+          .btn-dl{padding:5px 14px;background:var(--navy);color:var(--white);border-radius:6px;font-size:.78rem;font-weight:500;text-decoration:none;}
+          .btn-dl:hover{background:var(--navy2);color:var(--white);}
+          .no-docs{text-align:center;padding:28px;color:var(--muted);font-size:.88rem;}
+        </style>
+
+        <!-- NAV -->
+        <nav class="dash-nav">
+          <div class="dash-nav-brand">
+            <div class="nav-logo">U</div>
+            <div>
+              <div class="nav-title">University CRM</div>
+              <div class="nav-sub">Student Portal</div>
+            </div>
+          </div>
+          <div class="nav-right">
+            <span class="nav-student"><t t-esc="student.name"/></span>
+            <a t-attf-href="/student/logout">
+              <button class="nav-logout">Sign Out</button>
+            </a>
+          </div>
+        </nav>
+
+        <div class="dash-body">
+
+          <!-- ── APPLICATION PROGRESS ── -->
+          <div class="progress-card">
+            <div class="section-label">Application Progress</div>
+
+            <t t-set="pipeline" t-value="[('new','New Inquiry'),('options_sent','Options Sent'),('chosen','University Chosen'),('docs','Collecting Docs'),('enrolled','Enrolled')]"/>
+            <t t-set="statuses" t-value="['new','options_sent','chosen','docs','enrolled']"/>
+            <t t-set="current_idx" t-value="statuses.index(student.status) if student.status in statuses else -1"/>
+
+            <div class="progress-track">
+              <t t-foreach="pipeline" t-as="step">
+                <t t-set="step_key" t-value="step[0]"/>
+                <t t-set="step_label" t-value="step[1]"/>
+                <t t-set="step_idx" t-value="statuses.index(step_key)"/>
+                <t t-set="step_class" t-value="'current' if student.status == step_key else ('done' if step_idx &lt; current_idx else '')"/>
+                <div t-attf-class="p-step #{step_class}">
+                  <div class="p-dot">
+                    <t t-if="step_class == 'done'">✓</t>
+                    <t t-elif="step_class == 'current'"><t t-esc="step_idx + 1"/></t>
+                    <t t-else=""><t t-esc="step_idx + 1"/></t>
+                  </div>
+                  <div class="p-name"><t t-esc="step_label"/></div>
+                </div>
+              </t>
+              <t t-if="student.status == 'lost'">
+                <div class="p-step lost">
+                  <div class="p-dot">✗</div>
+                  <div class="p-name">Lost</div>
+                </div>
+              </t>
+            </div>
+          </div>
+
+          <!-- ── INFO CARDS ── -->
+          <div class="info-grid">
+            <!-- Contact -->
+            <div class="info-card">
+              <div class="ic-header">
+                <div class="ic-icon">👤</div>
+                <div class="ic-title">Contact Information</div>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Name</span>
+                <span class="ir-v"><t t-esc="student.name"/></span>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Email</span>
+                <span class="ir-v"><t t-esc="student.email or '—'"/></span>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Phone</span>
+                <span class="ir-v"><t t-esc="student.phone_full or '—'"/></span>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Nationality</span>
+                <span class="ir-v"><t t-esc="student.country_id.name if student.country_id else '—'"/></span>
+              </div>
+            </div>
+
+            <!-- Academic -->
+            <div class="info-card">
+              <div class="ic-header">
+                <div class="ic-icon">🎓</div>
+                <div class="ic-title">Academic Information</div>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Degree</span>
+                <span class="ir-v"><t t-esc="student.degree_level or '—'"/></span>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Specialization</span>
+                <span class="ir-v"><t t-esc="student.specialization_display or '—'"/></span>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Status</span>
+                <span class="ir-v">
+                  <span t-attf-class="sb sb-#{student.status}">
+                    <t t-esc="student.status.replace('_',' ').title() if student.status else '—'"/>
+                  </span>
+                </span>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Follow-up Date</span>
+                <span class="ir-v"><t t-esc="student.follow_up_date or '—'"/></span>
+              </div>
+            </div>
+
+            <!-- Budget -->
+            <div class="info-card">
+              <div class="ic-header">
+                <div class="ic-icon">💰</div>
+                <div class="ic-title">Budget &amp; Timeline</div>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Budget</span>
+                <span class="ir-v"><t t-esc="student.budget_display or '—'"/></span>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Currency</span>
+                <span class="ir-v"><t t-esc="student.currency_id.name if student.currency_id else '—'"/></span>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Date Added</span>
+                <span class="ir-v"><t t-esc="student.date_contacted or '—'"/></span>
+              </div>
+              <div class="ir">
+                <span class="ir-l">Advisor</span>
+                <span class="ir-v"><t t-esc="student.user_id.name if student.user_id else '—'"/></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── ADVISOR NOTES ── -->
+          <t t-if="student.notes">
+            <div class="notes-card">
+              <div class="nc-label">📋 Advisor Notes</div>
+              <div class="nc-text"><t t-esc="student.notes"/></div>
+            </div>
+          </t>
+
+          <!-- ── DOCUMENTS ── -->
+          <div class="docs-card">
+            <div class="docs-hd">
+              <div class="docs-title">
+                📎 Documents
+                <span class="count-badge"><t t-esc="len(attachments)"/> files</span>
+              </div>
+            </div>
+
+            <!-- Upload Form -->
+            <form t-attf-action="/student/dashboard/#{token}/upload"
+                  method="POST" enctype="multipart/form-data" id="uploadForm">
+              <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+              <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                <label class="upload-zone-label" for="fileInput">
+                  <span class="uz-icon">☁</span>
+                  <span class="uz-text"><strong>Click to choose files</strong><br/>or drag and drop here</span>
+                  <span class="uz-file-name" id="fileLabel">No files selected</span>
+                </label>
+                <input type="file" id="fileInput" name="files" multiple="multiple"
+                       onchange="updateLabel(this)"/>
+              </div>
+
+              <button type="submit" class="btn-submit">⬆ Upload Files</button>
+            </form>
+
+            <br/>
+
+            <!-- File list -->
+            <t t-if="attachments">
+              <div class="doc-list">
+                <t t-foreach="attachments" t-as="att">
+                  <div class="doc-item">
+                    <div class="doc-info">
+                      <div class="doc-ico">📄</div>
+                      <div>
+                        <div class="doc-n"><t t-esc="att.name"/></div>
+                        <div class="doc-m"><t t-esc="att.create_date"/></div>
+                      </div>
+                    </div>
+                    <a t-attf-href="/web/content/#{att.id}?download=true"
+                       class="btn-dl" target="_blank">⬇ Download</a>
+                  </div>
+                </t>
+              </div>
+            </t>
+            <t t-else="">
+              <div class="no-docs">
+                <div style="font-size:2rem;margin-bottom:8px">📂</div>
+                No documents uploaded yet. Use the form above to upload your files.
+              </div>
+            </t>
+          </div>
+
+        </div><!-- /dash-body -->
+
+        <script>
+          function updateLabel(input) {
+            var label = document.getElementById('fileLabel');
+            if (input.files.length === 0) {
+              label.textContent = 'No files selected';
+            } else if (input.files.length === 1) {
+              label.textContent = input.files[0].name;
+            } else {
+              label.textContent = input.files.length + ' files selected';
+            }
+          }
+        </script>
+      </t>
+    </template>
+
+    <!-- ══════════════════════════════════════════════════════
+         LEGACY — keep old templates so existing XML refs don't break
+    ══════════════════════════════════════════════════════ -->
+    <template id="portal_my_application" name="My Application (Legacy Redirect)">
+      <t t-call="web.layout">
+        <div style="padding:40px;text-align:center;font-family:sans-serif;">
+          <h2>Redirecting...</h2>
+          <p>Please wait while we redirect you to your application portal.</p>
+        </div>
+      </t>
+    </template>
+
+    <template id="portal_no_application" name="No Application">
+      <t t-call="web.layout">
+        <t t-set="head_title">Link Not Found</t>
+        <div style="padding:80px 32px;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;">
+          <div style="font-size:3rem;margin-bottom:16px">🔍</div>
+          <h2 style="font-family:'Sora',sans-serif;color:#162340;margin-bottom:12px;">Link Not Found</h2>
+          <p style="color:#6b7280;">This link is invalid or has expired. Please contact your university advisor.</p>
+        </div>
+      </t>
+    </template>
+
+  </data>
+</odoo>

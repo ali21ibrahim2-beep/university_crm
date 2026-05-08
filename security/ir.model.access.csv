@@ -1,3 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_student_lead_employee,student.lead.employee,model_student_lead,university_crm.group_university_employee,1,1,1,0
+access_student_lead_employee,student.lead.employee,model_student_lead,university_crm.group_university_employee,1,1,1,1
 access_student_lead_manager,student.lead.manager,model_student_lead,university_crm.group_university_manager,1,1,1,1
+access_delete_wizard_employee,delete.wizard.employee,model_student_lead_delete_wizard,university_crm.group_university_employee,1,1,1,1
+access_delete_wizard_manager,delete.wizard.manager,model_student_lead_delete_wizard,university_crm.group_university_manager,1,1,1,1
+access_phone_format_employee,phone.format.employee,model_phone_country_format,university_crm.group_university_employee,1,0,0,0
+access_phone_format_manager,phone.format.manager,model_phone_country_format,university_crm.group_university_manager,1,1,1,1
+access_student_archive_employee,student.archive.employee,model_student_archive,university_crm.group_university_employee,1,1,1,1
+access_student_archive_manager,student.archive.manager,model_student_archive,university_crm.group_university_manager,1,1,1,1

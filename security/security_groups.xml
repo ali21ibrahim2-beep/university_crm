@@ -15,14 +15,21 @@
     </record>
 
     <!-- ── EMPLOYEE GROUP ───────────────────────────────────
-         Regular employees — can only see their own students
+         Regular employees — can only see and manage their own students
+         Restrictions:
+         - Can only view/edit students they created (create_uid = user)
+         - Can only archive (delete) their own students
+         - Can only restore (unarchive) their own archived students
+         - Cannot see or interact with other employees' students
     ──────────────────────────────────────────────────────── -->
     <record id='group_university_employee' model='res.groups'>
       <field name='name'>Employee</field>
       <field name='category_id' ref='module_category_university_crm'/>
       <field name='comment'>
-        Can add and edit their own students only.
-        Cannot delete or see other employees students.
+        Can add, view, and edit their own students only.
+        Can archive their own students and restore their own archived students.
+        Cannot see, edit, or delete students created by other employees.
+        Cannot access archived students they didn't create/delete.
       </field>
     </record>
 
@@ -38,6 +45,14 @@
         Full access — can see all students, edit and delete anything.
         Can create employee accounts and send portal invitations.
       </field>
+    </record>
+
+    <!-- ── AUTO-ASSIGN ADMIN TO MANAGER ──────────────────────
+         Makes sure the admin user gets the Manager group
+         so the menu is visible right after installation
+    ──────────────────────────────────────────────────────── -->
+    <record id="base.user_admin" model="res.users">
+      <field name="groups_id" eval="[(4, ref('group_university_manager'))]"/>
     </record>
 
   </data>

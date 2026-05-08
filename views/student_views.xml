@@ -2,21 +2,46 @@
 <odoo>
   <data>
 
-    <!-- ── LIST VIEW ────────────────────────────────────────
-         Shows all students as rows in a table
-    ──────────────────────────────────────────────────────── -->
+    <!-- ── DELETE REASON WIZARD VIEW ──────────────────────── -->
+    <record id='view_delete_wizard_form' model='ir.ui.view'>
+      <field name='name'>student.lead.delete.wizard.form</field>
+      <field name='model'>student.lead.delete.wizard</field>
+      <field name='arch' type='xml'>
+        <form string='Delete Student'>
+          <group>
+            <field name='reason' string='Reason for Deletion'/>
+            <field name='other_reason'
+                   string='Please Specify'
+                   invisible="reason != 'other'"
+                   required="reason == 'other'"/>
+          </group>
+          <footer>
+            <button name='action_confirm_delete'
+                    type='object'
+                    string='Confirm Delete'
+                    class='btn-danger'/>
+            <button string='Cancel'
+                    class='btn-secondary'
+                    special='cancel'/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <!-- ── LIST VIEW ─────────────────────────────────────── -->
     <record id='view_student_lead_tree' model='ir.ui.view'>
       <field name='name'>student.lead.tree</field>
       <field name='model'>student.lead</field>
       <field name='arch' type='xml'>
-        <list string='Students' edit='true' delete='true'>
+        <list string='Students' edit='true' delete='false'>
           <field name='name'/>
           <field name='phone_full'/>
           <field name='email'/>
           <field name='country_id'/>
-          <field name='specialization'/>
+          <field name='degree_level'/>
+          <field name='specialization_display' string='Specialization'/>
           <field name='status'/>
-          <field name="user_id" string="Added By"/>
+          <field name='user_id' string='Added By'/>
           <field name='currency_id' optional='hide'/>
           <field name='budget_display'/>
           <field name='follow_up_date'/>
@@ -24,81 +49,96 @@
       </field>
     </record>
 
-    <!-- ── FORM VIEW ────────────────────────────────────────
-         Shows full details of one student
-    ──────────────────────────────────────────────────────── -->
+    <!-- ── FORM VIEW ─────────────────────────────────────── -->
     <record id='view_student_lead_form' model='ir.ui.view'>
       <field name='name'>student.lead.form</field>
       <field name='model'>student.lead</field>
       <field name='arch' type='xml'>
-        <form string='Student Lead'>
+        <form string='Student Lead' delete='false'>
 
-          <!-- ── HEADER BAR ──────────────────────────────────
-               Shows current status as colored badge
-               Save ☁️ and Discard ✕ appear automatically
-          ─────────────────────────────────────────────────── -->
           <header>
-            <field name='status' widget='badge'/>
+            <button name='action_open_delete_wizard'
+                    type='object'
+                    string='Delete'
+                    class='btn-danger'
+                    icon='fa-trash'/>
+            <!-- Copy portal link button — employee shares this with student -->
+            <button name='action_copy_portal_link'
+                    type='object'
+                    string='Copy Portal Link'
+                    class='btn-secondary'
+                    icon='fa-link'/>
+            <field name='status' widget='statusbar'
+                   statusbar_visible='new,options_sent,chosen,docs,enrolled'/>
           </header>
 
           <sheet>
 
-            <!-- ── BUTTON BOX ─────────────────────────────────
-                 Top right — navigation buttons
-            ─────────────────────────────────────────────────── -->
-            <div class="oe_button_box" name="button_box">
-              <button type="action"
-                      name="%(action_student_lead)d"
-                      string="All Students"
-                      class="oe_stat_button"
-                      icon="fa-users"/>
+            <!-- ── SMART BUTTON: DOCUMENTS ──────────────────
+                 Shows how many files the student has uploaded.
+                 Click to open the attachments list.
+            ─────────────────────────────────────────────── -->
+            <div class='oe_button_box' name='button_box'>
+              <button name='action_view_attachments'
+                      type='object'
+                      class='oe_stat_button'
+                      icon='fa-paperclip'>
+                <field name='attachment_count' widget='statinfo' string='Documents'/>
+              </button>
             </div>
 
-            <!-- Big title — student name -->
             <div class='oe_title'>
               <h1>
                 <field name='name' placeholder='Student Name...'/>
               </h1>
             </div>
 
-            <!-- ── CONTACT INFORMATION ─────────────────────────
-                 Left column — phone and contact details
-                 Right column — status and dates
-            ─────────────────────────────────────────────────── -->
+            <!-- ── WHATSAPP AND EMAIL BUTTONS ─────────────── -->
+            <div style="margin-bottom:12px; display:flex; gap:8px; padding-left:16px;">
+              <button name="action_open_whatsapp"
+                      type="object"
+                      string="WhatsApp"
+                      icon="fa-whatsapp"
+                      class="btn btn-success btn-sm"
+                      invisible="not whatsapp_url"/>
+              <button name="action_open_email"
+                      type="object"
+                      string="Email"
+                      icon="fa-envelope"
+                      class="btn btn-primary btn-sm"
+                      invisible="not email_url"/>
+            </div>
+
+            <!-- ── CONTACT INFORMATION ─────────────────────── -->
             <group string='Contact Information'>
-              <!-- Left column -->
               <group>
-                <!-- Country code + phone number -->
                 <field name='phone_country_id' string='Country Code'/>
-                <field name='phone' string='Phone Number'/>
-                <!-- Full phone auto generated — read only -->
+                <field name='phone' string='Phone Number' placeholder='Enter phone number'/>
+                <field name='phone_placeholder' string='Format Example' readonly='1'/>
                 <field name='phone_full' readonly='1'/>
-                <!-- Second phone — parent or alternative number -->
                 <field name='phone2' string='Second Phone'/>
-                <!-- Email — for portal invitation -->
                 <field name='email'/>
-                <!-- Nationality — searchable all countries -->
                 <field name='country_id' string='Nationality'/>
-                <!-- What student wants to study -->
-                <field name='specialization'/>
+                <field name='degree_level' string='Degree Level'/>
+                <field name='specialization' string='Academic Specialization'/>
+                <field name='specialization_other'
+                       string='Specify Specialization'
+                       invisible="specialization != 'other'"
+                       required="specialization == 'other'"
+                       placeholder='Enter specialization...'/>
               </group>
-              <!-- Right column -->
               <group>
-                <!-- Status — change anytime -->
                 <field name='status'/>
-                <!-- Currency — USD, EUR, TRY -->
                 <field name='currency_id'/>
-                <!-- Date first contacted -->
                 <field name='date_contacted'/>
-                <!-- Date to follow up -->
                 <field name='follow_up_date'/>
+                <field name='user_id' string='Added By' readonly='1'/>
+                <!-- Portal link shown so employee can also copy it manually -->
+                <field name='portal_url' string='Portal Link' readonly='1'/>
               </group>
             </group>
 
-            <!-- ── BUDGET SECTION ──────────────────────────────
-                 Left = exact budget
-                 Right = budget range
-            ─────────────────────────────────────────────────── -->
+            <!-- ── BUDGET ─────────────────────────────────── -->
             <group string='Budget'>
               <group string='Exact Budget'>
                 <field name='budget_amount' nolabel='1'/>
@@ -109,9 +149,7 @@
               </group>
             </group>
 
-            <!-- ── TABS ────────────────────────────────────────
-                 Notes tab — more tabs coming soon
-            ─────────────────────────────────────────────────── -->
+            <!-- ── NOTES ──────────────────────────────────── -->
             <notebook>
               <page string='Notes'>
                 <field name='notes' placeholder='Add notes...'/>
@@ -119,17 +157,29 @@
             </notebook>
 
           </sheet>
+          <!-- chatter removed — no discussions or tracking -->
+
         </form>
       </field>
     </record>
 
-    <!-- ── ACTION ───────────────────────────────────────────
-         Connects menu to views
-    ──────────────────────────────────────────────────────── -->
+    <!-- ── ACTION ────────────────────────────────────────── -->
     <record id='action_student_lead' model='ir.actions.act_window'>
       <field name='name'>Students</field>
       <field name='res_model'>student.lead</field>
       <field name='view_mode'>list,form</field>
+    </record>
+
+    <!-- ── SERVER ACTION — DELETE WITH REASON ──────────────── -->
+    <record id='action_delete_with_reason' model='ir.actions.server'>
+      <field name='name'>Delete with Reason</field>
+      <field name='model_id' ref='model_student_lead'/>
+      <field name='binding_model_id' ref='model_student_lead'/>
+      <field name='binding_view_types'>list,form</field>
+      <field name='state'>code</field>
+      <field name='code'>
+action = records.action_open_delete_wizard()
+      </field>
     </record>
 
   </data>

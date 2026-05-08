@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <data>
+
+    <!-- ── RECORD RULES ────────────────────────────────────────
+         Restricts employee access to records they created/own.
+         Managers have full access (no restrictions).
+    ──────────────────────────────────────────────────────────── -->
+
+    <!-- ── EMPLOYEE: Can only access their own students ──
+         Restriction: user_id = current user (assigned to)
+         This matches the _search override in student.lead model
+         Permissions: read, write, create (own records only), unlink
+    ────────────────────────────────────────────────────── -->
+    <record id='student_lead_employee_rule' model='ir.rule'>
+      <field name='name'>Employee Can Only Access Own Students</field>
+      <field name='model_id' ref='model_student_lead'/>
+      <field name='groups' eval="[(4, ref('university_crm.group_university_employee'))]"/>
+      <field name='domain_force'>[('user_id', '=', user.id)]</field>
+      <field name='perm_read'>True</field>
+      <field name='perm_write'>True</field>
+      <field name='perm_create'>True</field>
+      <field name='perm_unlink'>True</field>
+    </record>
+
+    <!-- ── EMPLOYEE: Can archive only their own students ──
+         Restriction: deleted_by = current user (who deleted it)
+         This matches the _search override in student.archive model
+         Permissions: read, create (when deleting), write (for object actions), unlink (to restore)
+         Form-level edit='false' prevents direct field edits
+    ────────────────────────────────────────────────────── -->
+    <record id='student_archive_employee_rule' model='ir.rule'>
+      <field name='name'>Employee Can Only Access Own Archived Students</field>
+      <field name='model_id' ref='model_student_archive'/>
+      <field name='groups' eval="[(4, ref('university_crm.group_university_employee'))]"/>
+      <field name='domain_force'>[('deleted_by', '=', user.id)]</field>
+      <field name='perm_read'>True</field>
+      <field name='perm_write'>True</field>
+      <field name='perm_create'>True</field>
+      <field name='perm_unlink'>True</field>
+    </record>
+
+    <!-- ── MANAGER + ADMIN: Full access rules ──────────────
+         Managers inherit the Employee group (implied_ids), which
+         pulls in the restrictive Employee rule above. Record rules
+         from multiple groups are ORed, so we add a permissive rule
+         scoped to Manager (and one to base.group_system for admins
+         who are not in the CRM Manager group). Without these, every
+         manager/admin is filtered to only their own records.
+    ────────────────────────────────────────────────────── -->
+    <record id='student_lead_manager_rule' model='ir.rule'>
+      <field name='name'>Manager Full Access Students</field>
+      <field name='model_id' ref='model_student_lead'/>
+      <field name='groups' eval="[(4, ref('university_crm.group_university_manager'))]"/>
+      <field name='domain_force'>[(1, '=', 1)]</field>
+      <field name='perm_read'>True</field>
+      <field name='perm_write'>True</field>
+      <field name='perm_create'>True</field>
+      <field name='perm_unlink'>True</field>
+    </record>
+
+    <record id='student_archive_manager_rule' model='ir.rule'>
+      <field name='name'>Manager Full Access Archived Students</field>
+      <field name='model_id' ref='model_student_archive'/>
+      <field name='groups' eval="[(4, ref('university_crm.group_university_manager'))]"/>
+      <field name='domain_force'>[(1, '=', 1)]</field>
+      <field name='perm_read'>True</field>
+      <field name='perm_write'>True</field>
+      <field name='perm_create'>True</field>
+      <field name='perm_unlink'>True</field>
+    </record>
+
+    <record id='student_lead_admin_rule' model='ir.rule'>
+      <field name='name'>Admin Full Access Students</field>
+      <field name='model_id' ref='model_student_lead'/>
+      <field name='groups' eval="[(4, ref('base.group_system'))]"/>
+      <field name='domain_force'>[(1, '=', 1)]</field>
+      <field name='perm_read'>True</field>
+      <field name='perm_write'>True</field>
+      <field name='perm_create'>True</field>
+      <field name='perm_unlink'>True</field>
+    </record>
+
+    <record id='student_archive_admin_rule' model='ir.rule'>
+      <field name='name'>Admin Full Access Archived Students</field>
+      <field name='model_id' ref='model_student_archive'/>
+      <field name='groups' eval="[(4, ref('base.group_system'))]"/>
+      <field name='domain_force'>[(1, '=', 1)]</field>
+      <field name='perm_read'>True</field>
+      <field name='perm_write'>True</field>
+      <field name='perm_create'>True</field>
+      <field name='perm_unlink'>True</field>
+    </record>
+
+  </data>
+</odoo>

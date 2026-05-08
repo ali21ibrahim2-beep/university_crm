@@ -62,33 +62,26 @@ class StudentLead(models.Model):
 
     @api.depends('phone_country_id')
     def _compute_phone_placeholder(self):
-        # Build the format example dynamically from phone.country.format
-        # so every configured country shows a hint without a hardcoded map.
+        placeholders = {
+            'TR': '5XX XXX XX XX',
+            'US': 'XXX XXX XXXX',
+            'GB': 'XXXX XXX XXXX',
+            'SA': '5X XXX XXXX',
+            'AE': '5X XXX XXXX',
+            'YE': '7XX XXX XXX',
+            'IQ': '7XX XXX XXXX',
+            'SY': '9XX XXX XXX',
+            'JO': '7X XXX XXXX',
+            'EG': '1XX XXX XXXX',
+            'DE': 'XXX XXXXXXXX',
+            'FR': 'X XX XX XX XX',
+        }
         for rec in self:
-            if not rec.phone_country_id:
-                rec.phone_placeholder = 'Enter phone number'
-                continue
-            fmt = self.env['phone.country.format'].search(
-                [('country_id', '=', rec.phone_country_id.id)], limit=1
-            )
-            if not fmt:
-                rec.phone_placeholder = 'Enter phone number'
-                continue
-            if fmt.leading_digit:
-                # leading_digit is a set of allowed first digits, e.g. "5" or "67".
-                allowed = fmt.leading_digit
-                first = allowed if len(allowed) == 1 else f'[{allowed}]'
-                pattern = first + 'X' * max(fmt.digit_count - 1, 0)
-                if len(allowed) == 1:
-                    hint = f'starts with {allowed}'
-                else:
-                    hint = 'starts with ' + ' or '.join(allowed)
-                rec.phone_placeholder = (
-                    f'{pattern}  —  {fmt.digit_count} digits, {hint}'
-                )
+            if rec.phone_country_id:
+                code = rec.phone_country_id.code
+                rec.phone_placeholder = placeholders.get(code, 'Enter phone number')
             else:
-                pattern = 'X' * fmt.digit_count
-                rec.phone_placeholder = f'{pattern}  —  {fmt.digit_count} digits'
+                rec.phone_placeholder = 'Enter phone number'
 
     phone = fields.Char(string='Phone Number')
 
@@ -297,7 +290,7 @@ class StudentLead(models.Model):
         for rec in self:
             if rec.email:
                 subject = (rec.name or 'Student').replace(' ', '%20')
-                rec.email_url = f"https://mail.google.com/mail/?view=cm&fs=1&to={rec.email}&su=Re%3A%20{subject}"
+                rec.email_url = f'mailto:{rec.email}?subject=Re%3A%20{subject}'
             else:
                 rec.email_url = ''
 
@@ -371,73 +364,17 @@ class StudentLead(models.Model):
                     [('country_id', '=', rec.phone_country_id.id)], limit=1
                 )
                 if fmt:
-                    issues = rec._phone_format_issues(digits_only, fmt)
-                    if issues:
+                    if len(digits_only) != fmt.digit_count:
                         raise ValidationError(
-                            f'Invalid phone number for {rec.phone_country_id.name}:\n'
-                            + '\n'.join(issues)
+                            f'Phone number for {rec.phone_country_id.name} '
+                            f'must be exactly {fmt.digit_count} digits. '
+                            f'You entered {len(digits_only)} digits.'
                         )
-
-    def _phone_format_issues(self, digits_only, fmt):
-        # Shared helper: returns a list of human-readable problems with the
-        # phone number against the given phone.country.format record.
-        # Used by both the live onchange warning and the save-time constraint
-        # so the two paths can never drift.
-        issues = []
-        if fmt.leading_digit and digits_only and digits_only[0] not in fmt.leading_digit:
-            allowed = fmt.leading_digit
-            if len(allowed) == 1:
-                expected = allowed
-            else:
-                expected = ' or '.join(allowed)
-            issues.append(
-                f'• First digit must be {expected} '
-                f'(you entered {digits_only[0]}).'
-            )
-        if len(digits_only) != fmt.digit_count:
-            if len(digits_only) < fmt.digit_count:
-                missing = fmt.digit_count - len(digits_only)
-                issues.append(
-                    f'• Number must be {fmt.digit_count} digits '
-                    f'(you entered {len(digits_only)} — {missing} more needed).'
-                )
-            else:
-                extra = len(digits_only) - fmt.digit_count
-                issues.append(
-                    f'• Number must be {fmt.digit_count} digits '
-                    f'(you entered {len(digits_only)} — {extra} too many).'
-                )
-        return issues
-
-    @api.onchange('phone', 'phone_country_id')
-    def _onchange_phone_validation(self):
-        # Live warning while the employee fills the form — fires when the
-        # phone or country field loses focus. Returns a {'warning': ...}
-        # dict which Odoo renders as a notification in the form view.
-        if not self.phone or not self.phone_country_id:
-            return
-        digits_only = re.sub(r'\D', '', self.phone)
-        if not digits_only:
-            return
-        fmt = self.env['phone.country.format'].search(
-            [('country_id', '=', self.phone_country_id.id)], limit=1
-        )
-        if not fmt:
-            return
-        issues = self._phone_format_issues(digits_only, fmt)
-        if issues:
-            if fmt.leading_digit:
-                allowed = fmt.leading_digit
-                starts_with = allowed if len(allowed) == 1 else ' or '.join(allowed)
-                expected = f'{fmt.digit_count} digits starting with {starts_with}'
-            else:
-                expected = f'{fmt.digit_count} digits'
-            return {
-                'warning': {
-                    'title': f'Phone format for {self.phone_country_id.name}',
-                    'message': f'Expected: {expected}.\n' + '\n'.join(issues),
-                }
-            }
+                    if fmt.leading_digit and not digits_only.startswith(fmt.leading_digit):
+                        raise ValidationError(
+                            f'Phone number for {rec.phone_country_id.name} '
+                            f'must start with {fmt.leading_digit}.'
+                        )
 
     @api.constrains('specialization', 'specialization_other')
     def _check_specialization_other(self):

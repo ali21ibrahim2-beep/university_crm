@@ -1,33 +1,4 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
-  <data>
-
-    <!-- ── DEMO STUDENT 1 ────────────────────────────────────
-         This is fake data that loads when you install the module
-         It helps you see how the module looks with real data
-    ──────────────────────────────────────────────────────── -->
-    <record id='lead_ahmad' model='student.lead'>
-      <!-- Each field here matches a field in student_lead.py -->
-      <field name='name'>Ahmad Al-Sayed</field>
-      <field name='phone'>+963 944 123456</field>
-      <field name='nationality'>Syrian</field>
-      <field name='budget_usd'>7000</field>
-      <!-- This must match one of the Selection values in Python -->
-      <field name='status'>new</field>
-    </record>
-
-    <!-- ── DEMO STUDENT 2 ────────────────────────────────────
-         A second student with a different status
-         so you can see how different statuses look
-    ──────────────────────────────────────────────────────── -->
-    <record id='lead_sara' model='student.lead'>
-      <field name='name'>Sara Mohammed</field>
-      <field name='phone'>+964 770 654321</field>
-      <field name='nationality'>Iraqi</field>
-      <field name='budget_usd'>8500</field>
-      <!-- options_sent = we already sent university options to her -->
-      <field name='status'>options_sent</field>
-    </record>
-
-  </data>
+  <data/>
 </odoo>
